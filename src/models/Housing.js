@@ -9,7 +9,7 @@ const housingSchema = new mongoose.Schema(
         },
         type: {
             type: String,
-            enum: [['Apartment', 'Villa', 'House'], 'Wrong property type'],
+            enum: ['Apartment', 'Villa', 'House'],
             required: [true, 'Type is required']
         },
         year: {
