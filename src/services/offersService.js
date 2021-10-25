@@ -1,12 +1,8 @@
 const Housing = require('../models/Housing');
 
-const getAll = (params) => {
-    if (params) {
-        return Housing.find().limit(params).sort({ createdAt: -1 }).lean();
-    }
+const getAll = (params) => 
+    params ? Housing.find().limit(params).sort({ createdAt: -1 }).lean() : Housing.find().lean();
 
-    return Housing.find().lean();
-}
 
 const create = (data) => Housing.create(data);
 
