@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: [true, 'Name is required']
+            required: [true, 'Name is required'],
+            validate:[/^([A-Z][a-z]+ [A-Z][a-z]+)$/, 'Invalid name format']
         },
         username: {
             type: String,
