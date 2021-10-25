@@ -1,4 +1,4 @@
-const { jwtVerify, jwtSign } = require('../utils/jwtUtil');
+const { jwtVerify } = require('../utils/jwtUtil');
 const { COOKIE_NAME, JWT_SECRET } = require('../utils/constants');
 const offersService = require('../services/offersService');
 
