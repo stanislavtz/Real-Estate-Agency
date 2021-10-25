@@ -69,18 +69,22 @@ async function getOfferDetailsPage(req, res) {
 async function rentHome(req, res) {
     const offer = await offersService.getOne(req.params.offerId);
 
-    if (offer.pieces > 0) {
-        offer.tenants.push(req.user._id);
-        offer.pieces--;
-    }
-
     try {
+        if (offer.pieces > 0) {
+            offer.tenants.push(req.user._id);
+            offer.pieces--;
+        } else {
+            throw { message: 'No available pieces' }
+        }
+
+        console.log('passed')
         await offersService.update(offer._id, offer);
         res.redirect('/housing');
     } catch (error) {
-        console.error(error)
+        console.error(error);
+        res.locals.error = error;
+        res.render('offers/details', {offer});
     }
-
 }
 
 async function getEditOfferPage(req, res) {
@@ -109,7 +113,7 @@ async function editOffer(req, res) {
 router.get('/', getOffersPage);
 router.get('/search', getSearchPage);
 router.get('/:offerId/details', getOfferDetailsPage);
-router.get('/:offerId/rent', rentHome);
+router.get('/:offerId/rent', isAuthenticated, rentHome);
 
 router.get('/create', isAuthenticated, getCreateOfferPage);
 router.post('/create', isAuthenticated, createOffer);
