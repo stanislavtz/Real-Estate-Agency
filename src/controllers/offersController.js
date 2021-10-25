@@ -32,8 +32,8 @@ async function createOffer(req, res) {
         await offersService.create(offer);
         res.redirect('/housing');
     } catch (error) {
+        console.error(error);
         res.locals.error = error.errors ? Object.values(error.errors)[0] : error;
-
         res.render('offers/create', { ...req.body });
     }
 }
@@ -101,7 +101,7 @@ async function editOffer(req, res) {
         res.redirect('/housing');
     } catch (error) {
         console.error(error);
-        res.locals.error = error;
+        res.locals.error = error.errors ? Object.values(error.errors)[0] : error;
         res.render('offers/edit', { ...req.body });
     }
 }
