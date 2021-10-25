@@ -5,7 +5,7 @@ const housingSchema = new mongoose.Schema(
         name: {
             type: String,
             required: [true, 'Name is required'],
-            validate:[/^([A-Z][a-z]+ [A-Z][a-z]+)$/, 'Invalid name format']
+            validate:[/^[A-Z][A-Za-z0-9 ]+$/, 'Invalid name format']
         },
         type: {
             type: String,
