@@ -1,5 +1,6 @@
 const { jwtVerify, jwtSign } = require('../utils/jwtUtil');
 const { COOKIE_NAME, JWT_SECRET } = require('../utils/constants');
+const offersService = require('../services/offersService');
 
 exports.auth = () => async function (req, res, next) {
     const token = req.cookies[COOKIE_NAME];
@@ -36,6 +37,17 @@ exports.isAuthenticated = function (req, res, next) {
     res.status(401).render('404');
 }
 
-exports.isAuthorized = function (req, res, next) {
-    
+exports.isAuthorized = async function (req, res, next) {
+    const offer = await offersService.getOne(req.params.offerId);
+    if (!offer) {
+        throw { message: 'Offer was removed' }
+    }
+
+    if (offer.ownerId == req.user._id) {
+        res.locals.user.isOwner = true
+    } else {
+        res.locals.user.isOwner = false
+    }
+
+    next();
 }
