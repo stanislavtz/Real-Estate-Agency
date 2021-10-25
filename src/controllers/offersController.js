@@ -114,7 +114,7 @@ router.get('/:offerId/rent', rentHome);
 router.get('/create', isAuthenticated, getCreateOfferPage);
 router.post('/create', isAuthenticated, createOffer);
 
-router.get('/:offerId/edit', getEditOfferPage);
-router.post('/:offerId/edit', editOffer);
+router.get('/:offerId/edit', isAuthenticated, isAuthorized, getEditOfferPage);
+router.post('/:offerId/edit', isAuthenticated, isAuthorized, editOffer);
 
 module.exports = router;
