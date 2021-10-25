@@ -9,9 +9,12 @@ const getOne = (id) => Housing.findById(id).populate('tenants').lean();
 
 const update = (id, offer) => Housing.findByIdAndUpdate(id, offer, { runValidators: true });
 
+const deleteOne = (id) => Housing.findByIdAndDelete(id);
+
 module.exports = {
     create,
     getAll,
     getOne,
-    update
+    update,
+    deleteOne
 }

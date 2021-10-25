@@ -2,6 +2,7 @@ const router = require('express').Router();
 
 const offersService = require('../services/offersService');
 const { isAuthenticated, isAuthorized } = require('../middlewares/authMiddleware');
+const { isAvailablePlaces } = require('../middlewares/rentMiddleware');
 
 async function getOffersPage(req, res) {
     res.locals.title = 'Housing Page';
@@ -43,6 +44,9 @@ async function getOfferDetailsPage(req, res) {
 
     try {
         const offer = await offersService.getOne(req.params.offerId);
+        if (!offer) {
+            throw { message: 'Wrong offer request' }
+        }
 
         if (offer.ownerId == req.user?._id) {
             res.locals.user.isOwner = true;
@@ -68,22 +72,17 @@ async function getOfferDetailsPage(req, res) {
 
 async function rentHome(req, res) {
     const offer = await offersService.getOne(req.params.offerId);
-
     try {
-        if (offer.pieces > 0) {
-            offer.tenants.push(req.user._id);
-            offer.pieces--;
-        } else {
-            throw { message: 'No available pieces' }
-        }
+        offer.tenants.push(req.user._id);
+        offer.pieces--;
 
-        console.log('passed')
         await offersService.update(offer._id, offer);
+
         res.redirect('/housing');
     } catch (error) {
         console.error(error);
         res.locals.error = error;
-        res.render('offers/details', {offer});
+        res.render('offers/details', { offer });
     }
 }
 
@@ -110,15 +109,22 @@ async function editOffer(req, res) {
     }
 }
 
+async function deleteOffer(req, res) {
+    await offersService.deleteOne(req.params.offerId);
+    res.redirect('/housing');
+}
+
 router.get('/', getOffersPage);
 router.get('/search', getSearchPage);
 router.get('/:offerId/details', getOfferDetailsPage);
-router.get('/:offerId/rent', isAuthenticated, rentHome);
+router.get('/:offerId/rent', isAuthenticated, isAvailablePlaces, rentHome);
 
 router.get('/create', isAuthenticated, getCreateOfferPage);
 router.post('/create', isAuthenticated, createOffer);
 
 router.get('/:offerId/edit', isAuthenticated, isAuthorized, getEditOfferPage);
 router.post('/:offerId/edit', isAuthenticated, isAuthorized, editOffer);
+
+router.get('/:offerId/delete', isAuthenticated, isAuthorized, deleteOffer);
 
 module.exports = router;
