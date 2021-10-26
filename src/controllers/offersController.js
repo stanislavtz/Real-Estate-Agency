@@ -23,7 +23,8 @@ function getSearchPage(req, res) {
 }
 
 async function searchOffers(req, res) {
-    const offers = await offersService.getSearched(req.body);
+    const text = req.body.text;
+    const offers = await offersService.getSearched(text);
     const noMatches = offers.length == 0 ? true : false
 
     console.log(offers)

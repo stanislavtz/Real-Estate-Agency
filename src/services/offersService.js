@@ -3,7 +3,7 @@ const Housing = require('../models/Housing');
 const getAll = (params) => 
     params ? Housing.find().limit(params).sort({ createdAt: -1 }).lean() : Housing.find().lean();
 
-const getSearched = (query) => Housing.find({type: {'$regex': query.text, $options:'i'}}).lean();
+const getSearched = (text) => Housing.find({type: {'$regex': text, $options:'i'}}).lean();
 
 const create = (data) => Housing.create(data);
 
