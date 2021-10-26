@@ -23,10 +23,12 @@ function getSearchPage(req, res) {
 }
 
 async function searchOffers(req, res) {
-    console.log(req.query)
-    const offers = await offersService.getSearched(req.query);
-    
-    res.render('offers/search', {offers})
+    const offers = await offersService.getSearched(req.body);
+    const noMatches = offers.length == 0 ? true : false
+
+    console.log(offers)
+
+    res.render('offers/search', { offers, noMatches });
 }
 
 function getCreateOfferPage(req, res) {
