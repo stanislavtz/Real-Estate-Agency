@@ -5,7 +5,7 @@ const housingSchema = new mongoose.Schema(
         name: {
             type: String,
             required: [true, 'Name is required'],
-            validate:[/^[A-Z][A-Za-z0-9 ]+$/, 'Invalid name format']
+            min: [6, 'The name should be at least 6 characters']
         },
         type: {
             type: String,
@@ -14,11 +14,14 @@ const housingSchema = new mongoose.Schema(
         },
         year: {
             type: Number,
-            required: [true, 'Year is required']
+            required: [true, 'Year is required'],
+            min: [1850, 'The year should more or equal to 1850'],
+            max: [2021, 'The year should be less or equal to 2021']
         },
         city: {
             type: String,
-            required: [true, 'City is required']
+            required: [true, 'City is required'],
+            min: [4, 'The city should be at least 4 characters long']
         },
         image: {
             type: String,
@@ -27,13 +30,16 @@ const housingSchema = new mongoose.Schema(
         },
         description: {
             type: String,
-            required: [true, 'Description is required']
+            required: [true, 'Description is required'],
+            max: [60, 'The description should be a maximum of 60 characters long']
         },
         pieces: {
             type: Number,
-            required: [true, 'Pieces is required']
+            required: [true, 'Pieces is required'],
+            min: [0, 'The pieces should be more or qual to 0'],
+            max: [10, 'The pieces should be more or qual to 10']
         },
-        tenants:[
+        tenants: [
             {
                 type: mongoose.Types.ObjectId,
                 ref: 'User'
@@ -49,11 +55,11 @@ const housingSchema = new mongoose.Schema(
     }
 );
 
-housingSchema.pre('findByIdAndUpdate', function(next) {
+housingSchema.pre('findByIdAndUpdate', function (next) {
     this.options.runValidators = true;
     next();
-  });
+});
 
-  const Housing = mongoose.model('Housing', housingSchema);
-  
-  module.exports = Housing;
+const Housing = mongoose.model('Housing', housingSchema);
+
+module.exports = Housing;
