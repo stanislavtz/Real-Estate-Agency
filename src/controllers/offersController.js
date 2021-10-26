@@ -19,7 +19,14 @@ async function getOffersPage(req, res) {
 
 function getSearchPage(req, res) {
     res.locals.title = 'Search Page';
-    res.render('offers/search')
+    res.render('offers/search');
+}
+
+async function searchOffers(req, res) {
+    console.log(req.query)
+    const offers = await offersService.getSearched(req.query);
+    
+    res.render('offers/search', {offers})
 }
 
 function getCreateOfferPage(req, res) {
@@ -115,7 +122,6 @@ async function deleteOffer(req, res) {
 }
 
 router.get('/', getOffersPage);
-router.get('/search', getSearchPage);
 router.get('/:offerId/details', getOfferDetailsPage);
 router.get('/:offerId/rent', isAuthenticated, isAvailablePlaces, rentHome);
 
@@ -126,5 +132,8 @@ router.get('/:offerId/edit', isAuthenticated, isAuthorized, getEditOfferPage);
 router.post('/:offerId/edit', isAuthenticated, isAuthorized, editOffer);
 
 router.get('/:offerId/delete', isAuthenticated, isAuthorized, deleteOffer);
+
+router.get('/search', getSearchPage);
+router.post('/search', searchOffers);
 
 module.exports = router;

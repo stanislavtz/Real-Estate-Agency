@@ -3,6 +3,8 @@ const Housing = require('../models/Housing');
 const getAll = (params) => 
     params ? Housing.find().limit(params).sort({ createdAt: -1 }).lean() : Housing.find().lean();
 
+const getSearched = (query) => Housing.find({type: query})
+
 const create = (data) => Housing.create(data);
 
 const getOne = (id) => Housing.findById(id).populate('tenants').lean();
@@ -16,5 +18,6 @@ module.exports = {
     getAll,
     getOne,
     update,
-    deleteOne
+    deleteOne,
+    getSearched
 }
